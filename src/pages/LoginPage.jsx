@@ -24,8 +24,8 @@ export default function LoginPage() {
 
     try {
       const res = await api.post('/api/auth/login', form);
-      const { data } = res.data; // { success, data: { token, user }, message }
-      login(data.token, data.user);
+      const { data } = res.data;  // { success, data: { token }, message }
+      login(data.token, null);
       navigate('/');
     } catch (err) {
       setError(err.response?.data?.message || '로그인에 실패했습니다.');
