@@ -2,6 +2,10 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import useAuthStore from './store/authStore';
+// ExerciseDetailPage를 import 합니다
+// 경로를 ./pages/ExerciseDetailPage 로 쓰는 이유 →
+// App.jsx 기준으로 pages 폴더 안에 있기 때문입니다
+import ExerciseDetailPage from './pages/ExerciseDetailPage';
 
 // 로그인 안 했으면 /login 으로 튕기는 보호 라우트
 function PrivateRoute({ children }) {
@@ -46,6 +50,19 @@ export default function App() {
               <div style={{ color: '#fff', padding: '40px', fontFamily: 'sans-serif' }}>
                 🏋️ 홈 페이지 (준비 중)
               </div>
+            </PrivateRoute>
+          }
+        />
+
+        {/* /exercise/:id 로 등록하는 이유 →
+          :id 는 "여기에 어떤 숫자나 문자가 와도 된다" 는 뜻입니다
+          /exercise/1, /exercise/2 모두 이 라우트가 받아서 ExerciseDetailPage를 보여줍니다
+          useParams() 로 그 값을 꺼낼 수 있습니다 */}
+        <Route
+          path="/exercise/:id"
+          element={
+            <PrivateRoute>
+              <ExerciseDetailPage />
             </PrivateRoute>
           }
         />
