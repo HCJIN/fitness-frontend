@@ -1,0 +1,182 @@
+/* ── 전체 컨테이너 (AuthPage의 배경 및 폰트 무드 이식) ── */
+.exercise-container {
+    min-height: 100vh;
+    background-color: #0a0a0a; /* 시그니처 딥블랙 일치 */
+    color: #eee;
+    font-family: 'Barlow', sans-serif;
+    padding: 60px 48px;
+}
+
+/* ── 상단 타이틀 헤더 영역 (JOIN NOW 타이틀 감성) ── */
+.exercise-header {
+    text-align: center;
+    margin-bottom: 48px;
+    position: relative;
+}
+
+.exercise-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 54px;
+    color: #FF6B35; /* 시그니처 오렌지 */
+    letter-spacing: 3px;
+    margin-bottom: 8px;
+}
+
+.exercise-logo span {
+    color: #fff;
+}
+
+.exercise-sub {
+    font-size: 14px;
+    color: #555; /* AuthPage 서브 텍스트 컬러 일치 */
+    letter-spacing: 0.5px;
+}
+
+/* ── 부위 선택 탭 (auth-tab-row 디자인 100% 이식) ── */
+.exercise-tab-row {
+    display: flex;
+    max-width: 500px; /* 탭바가 너무 퍼지지 않게 중앙 정렬 */
+    margin: 0 auto 48px auto;
+    background: #111; /* auth-right의 배경색을 탭 트랙으로 활용 */
+    border-radius: 8px;
+    padding: 4px;
+    border: 1px solid #222;
+}
+
+.exercise-tab {
+    flex: 1;
+    padding: 10px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: 'Barlow', sans-serif;
+    cursor: pointer;
+    border-radius: 6px;
+    color: #555;
+    border: none;
+    background: none;
+    letter-spacing: 0.5px;
+    transition: all 0.2s;
+}
+
+/* 활성화 상태는 auth-tab.active와 완벽히 동일 */
+.exercise-tab.active {
+    background: #FF6B35;
+    color: #fff;
+}
+
+.exercise-tab:hover:not(.active) {
+    color: #eee;
+}
+
+/* ── 상태 메시지 (로딩, 에러 등) ── */
+.exercise-status {
+    text-align: center;
+    color: #666;
+    font-size: 14px;
+    margin-top: 40px;
+}
+
+.exercise-error {
+    max-width: 400px;
+    margin: 40px auto 0 auto;
+    font-size: 13px;
+    color: #ff4444;
+    padding: 10px 14px;
+    background: rgba(255, 68, 68, 0.08);
+    border: 1px solid rgba(255, 68, 68, 0.2);
+    border-radius: 8px;
+    text-align: center;
+}
+
+/* ── 바둑판형 배열 그리드 (카드 레이아웃 정의) ── */
+.exercise-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* ── 운동 정보 카드 스타일 (인풋 필드 및 버튼 디테일 차용) ── */
+.exercise-card {
+    background: #111; /* auth-right와 동일한 프레임 워크 다크 그레이 */
+    border: 1px solid #222; /* 인풋 테두리와 일치 */
+    border-radius: 8px;
+    padding: 24px;
+    cursor: pointer;
+    position: relative;
+    transition: border-color 0.2s, transform 0.2s;
+}
+
+/* 호버 시 인풋 포커스 및 메인 버튼 인터랙션 녹여내기 */
+.exercise-card:hover {
+    border-color: #FF6B35;
+    transform: translateY(-4px);
+}
+
+.card-badge {
+    display: inline-block;
+    font-family: 'Bebas Neue', sans-serif;
+    background: rgba(255, 107, 53, 0.1);
+    color: #FF6B35;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 14px;
+    letter-spacing: 1px;
+    margin-bottom: 16px;
+}
+
+.card-name {
+    font-family: 'Barlow', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 10px;
+}
+
+.card-desc {
+    color: #888; /* auth-left-sub와 동일한 가독성 컬러 */
+    font-size: 14px;
+    line-height: 1.6;
+
+    /* 3줄 이상 넘어가면 자동으로 ... 처리해주는 안전장치 */
+    height: 4.8em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+}
+
+.card-footer {
+    margin-top: 20px;
+    border-top: 1px solid #1e1e1e; /* 스플릿 디바이더 라인과 일치 */
+    padding-top: 14px;
+}
+
+.card-keyword {
+    font-size: 12px;
+    color: #444; /* 플레이스홀더 컬러와 일치하여 묵직하게 톤 다운 */
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.exercise-card:hover .card-keyword {
+    color: #FF6B35; /* 카드에 불 들어올 때 같이 하이라이팅 */
+}
+
+/* ── 반응형 가이드 (모바일 스크린 대응) ── */
+@media (max-width: 768px) {
+    .exercise-container {
+        padding: 40px 24px;
+    }
+
+    .exercise-tab-row {
+        width: 100%;
+    }
+
+    .exercise-logo {
+        font-size: 42px;
+    }
+}
