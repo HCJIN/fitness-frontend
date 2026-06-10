@@ -39,16 +39,47 @@ export const searchYoutubeVideos = async (keyword) => {
   // 검색어에 한글이나 공백이 있으면 URL이 깨집니다
   // encodeURIComponent( '벤치 프레스' ) -> 'bench%20press' 처럼 URL에 안전한 형태로 변환해줍니다
   //
-  // maxResults=3 -> 영상 3개만 가져옵니다 (YouTube API는 호출당 유닛을 소모하기 때문에 최소로)
-  const response = await fetch(
-    `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(keyword)}&type=video&maxResults=3&key=${API_KEY}`
+  // maxResults=10 → 쇼츠 필터링 후 3개를 남기기 위해 넉넉하게 10개를 먼저 가져옵니다
+  // videoDuration=short → YouTube 기준 4분 이하 영상만 검색합니다 (쇼츠가 여기 포함됩니다)
+  // relevanceLanguage=ko → 한국어 콘텐츠를 우선적으로 노출합니다
+  // regionCode=KR → 한국 지역 기준으로 검색 결과를 가져옵니다
+  // q에 shorts를 붙이는 이유 → YouTube가 쇼츠 콘텐츠를 더 잘 찾아주기 때문입니다
+  const searchRes = await fetch(
+    `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(keyword)} shorts&type=video&maxResults=10&key=${API_KEY}&relevanceLanguage=ko&regionCode=KR&videoDuration=short`
   );
 
-  const data = await response.json();
+  const searchData = await searchRes.json();
+  const items = searchData.items;
 
-  // data 전체가 아니라 data.items 만 반환하는 이유 ->
-  // YouTube API 응답에는 kind, etag, nextPageToken 등 우리가 필요없는 정보가 많습니다
-  // 실제 영상 목록은 items 배열 안에 있어서 그것만 꺼내서 반환합닌다
-  return data.items;
+  // videoId 목록을 콤마로 연결해서 duration 한 번에 조회하는 이유 →
+  // 영상마다 따로 API를 호출하면 10번 호출해야 하지만
+  // id를 콤마로 연결하면 1번 호출로 전부 가져올 수 있어서 API 유닛을 아낄 수 있습니다
+  const ids = items.map(v => v.id.videoId).join(',');
+
+  // contentDetails → 영상 길이(duration) 정보가 여기에 담겨 있습니다
+  const detailRes = await fetch(
+    `https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=${ids}&key=${API_KEY}`
+  );
+  const detailData = await detailRes.json();
+
+  // ISO 8601 duration 형식을 초로 변환하는 함수입니다
+  // YouTube API는 영상 길이를 PT1M30S (1분 30초) 형태로 줍니다
+  // 정규식으로 분(M)과 초(S)를 꺼내서 초 단위로 환산합니다
+  // 예) PT1M30S → 1*60 + 30 = 90초
+  // 예) PT45S   → 0*60 + 45 = 45초 (분이 없으면 0으로 처리)
+  const toSeconds = (duration) => {
+    const match = duration.match(/PT(?:(\d+)M)?(?:(\d+)S)?/);
+    return (parseInt(match[1] || 0) * 60) + parseInt(match[2] || 0);
+  };
+
+  // 60초 이하인 영상의 id만 골라냅니다
+  // YouTube Shorts는 최대 60초이기 때문에 이 기준으로 진짜 쇼츠를 필터링합니다
+  const shortIds = detailData.items
+    .filter(v => toSeconds(v.contentDetails.duration) <= 60)
+    .map(v => v.id);
+
+  // 쇼츠에 해당하는 영상만 남기고 최대 3개만 반환합니다
+  // slice(0, 3) → 배열의 0번째부터 2번째까지 (총 3개) 를 잘라냅니다
+  return items.filter(v => shortIds.includes(v.id.videoId)).slice(0, 3);
 
 };

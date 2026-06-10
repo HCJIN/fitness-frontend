@@ -112,11 +112,12 @@ export default function ExerciseDetailPage() {
 
               {/* iframe으로 YouTube 영상을 직접 페이지에 임베드합니다
                   src에 videoId를 넣으면 해당 영상이 플레이어로 표시됩니다
-                  allowFullScreen → 전체화면 버튼을 활성화합니다 */}
+                  allowFullScreen → 전체화면 버튼을 활성화합니다
+                  rel=0 → 영상 끝난 후 관련 영상을 같은 채널 것만 보여줍니다 (광고성 영상 최소화) */}
               <iframe
                 width="100%"
                 height="200"
-                src={`https://www.youtube.com/embed/${video.id.videoId}`}
+                src={`https://www.youtube.com/embed/${video.id.videoId}?rel=0`}
                 title={video.snippet.title}
                 frameBorder="0"
                 allowFullScreen
