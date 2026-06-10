@@ -6,6 +6,7 @@ import useAuthStore from './store/authStore';
 // 경로를 ./pages/ExerciseDetailPage 로 쓰는 이유 →
 // App.jsx 기준으로 pages 폴더 안에 있기 때문입니다
 import ExerciseDetailPage from './pages/ExerciseDetailPage';
+import ExercisePage from './pages/ExercisePage';
 
 // 로그인 안 했으면 /login 으로 튕기는 보호 라우트
 function PrivateRoute({ children }) {
@@ -46,10 +47,16 @@ export default function App() {
           path="/"
           element={
             <PrivateRoute>
-              {/* 추후 <HomePage /> 로 교체 */}
-              <div style={{ color: '#fff', padding: '40px', fontFamily: 'sans-serif' }}>
-                🏋️ 홈 페이지 (준비 중)
-              </div>
+              <Navigate to="/exercises" replace />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/exercises"
+          element={
+            <PrivateRoute>
+              <ExercisePage />
             </PrivateRoute>
           }
         />

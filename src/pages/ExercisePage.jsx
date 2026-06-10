@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 // 리액트 라우터에서 페이지 이동 기능을 제공
 // navigate('/경로') 형태로 사용
 import { useNavigate } from 'react-router-dom';
-import api from '../api/axios.js';
+import { getExercisesByPart } from '../api/exerciseApi';
 import './ExercisePage.css';
 
 // ExercisePage를 선언하고 외부에서 사용 가능하도록 export 함.
@@ -34,8 +34,8 @@ export default function ExercisePage() {
             setError('');
 
             try {
-                const response = await api.get(`/api/exercises?part=${currentPart}}`);
-                setExercises(response.data);
+                const response = await getExercisesByPart(currentPart);
+                setExercises(response.data.data);
             } catch (err) {
                 setError(err.response?.data?.message || '운동 목록을 불러오지 못했습니다.');
             }finally {
